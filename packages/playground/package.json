@@ -8,7 +8,7 @@
     "server1": "vue-ssr server1"
   },
   "devDependencies": {
-    "vue-ssr": "workspace:^1.0.0"
+    "vue-ssr": "workspace:^0.0.1"
   },
   "dependencies": {
     "vue": "^3.2.47",

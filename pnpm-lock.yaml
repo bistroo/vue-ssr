@@ -9,7 +9,7 @@ importers:
     specifiers:
       vue: ^3.2.47
       vue-router: '4'
-      vue-ssr: workspace:^1.0.0
+      vue-ssr: workspace:^0.0.1
     dependencies:
       vue: 3.2.47
       vue-router: 4.1.6_vue@3.2.47

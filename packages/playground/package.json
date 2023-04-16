@@ -1,0 +1,17 @@
+{
+  "name": "playground",
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vue-ssr",
+    "build": "vue-ssr build",
+    "server1": "vue-ssr server1"
+  },
+  "devDependencies": {
+    "vue-ssr": "workspace:^1.0.0"
+  },
+  "dependencies": {
+    "vue": "^3.2.47",
+    "vue-router": "4"
+  }
+}

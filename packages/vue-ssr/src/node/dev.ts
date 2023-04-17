@@ -17,7 +17,7 @@ export async function dev({ port, vite: viteConfig }: { port: number, vite?: Use
   let vite = await (
     await import('vite')
   ).createServer(mergeConfig({
-    base: '/test/',
+    base: '/',
     root: cwd(),
     logLevel: 'info',
     plugins: [vue()],
@@ -30,7 +30,7 @@ export async function dev({ port, vite: viteConfig }: { port: number, vite?: Use
   app.use(vite.middlewares)
   app.use('*', async (req, res) => {
     try {
-      const url = req.originalUrl.replace('/test/', '/')
+      const url = req.originalUrl
 
       let template = fs.readFileSync(join(cwd(), 'index.html'), 'utf-8')
       template = await vite.transformIndexHtml(url, template)

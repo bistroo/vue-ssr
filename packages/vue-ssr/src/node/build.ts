@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url'
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
 export async function build(viteConfig?: UserConfig) {
-  const base = '/test/'
+  const base = '/'
 
   await _build(mergeConfig({
     base,

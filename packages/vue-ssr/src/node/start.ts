@@ -12,14 +12,11 @@ export async function start(port: number) {
 
   const app = express()
   app.use((await import('compression')).default())
-  app.use(
-    '/test/',
-    (await import('serve-static')).default(join(cwd(), 'dist/client'), {
-      index: false,
-    }),
-  )
+  app.use('/', (await import('serve-static')).default(join(cwd(), 'dist/client'), {
+    index: false,
+  }),)
   app.use('*', async (req, res) => {
-    const url = req.originalUrl.replace('/test/', '/')
+    const url = req.originalUrl
 
     const template = indexProd
     const render = (await import(join(cwd(), 'dist/server/index.js'))).render

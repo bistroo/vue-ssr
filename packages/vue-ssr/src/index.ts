@@ -19,8 +19,8 @@ export function vueSSR(
 {
   const router = createRouter({
     history: import.meta.env.SSR
-      ? createMemoryHistory('/test/')
-      : createWebHistory('/test/'),
+      ? createMemoryHistory('/')
+      : createWebHistory('/'),
     routes,
   })
 

@@ -8,6 +8,14 @@
   "bin": {
     "vue-ssr": "bin/vue-ssr.js"
   },
+  "bugs": {
+    "url": "https://github.com/yooouuri/vue-ssr/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yooouuri/vue-ssr.git",
+    "directory": "packages/vue-ssr"
+  },
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
@@ -20,7 +28,7 @@
     "dev": "rollup -w -c",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
+  "keywords": ["vue3", "ssr", "vite"],
   "dependencies": {
     "@vitejs/plugin-vue": "^4.1.0",
     "compression": "^1.7.4",

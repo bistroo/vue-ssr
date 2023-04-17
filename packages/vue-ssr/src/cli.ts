@@ -15,7 +15,7 @@ const command = args._[0];
 if (command === 'build') {
   await build(config.vite)
 } else if (command === 'start') {
-  await start(config.runPort ?? 5173)
+  await start(config.startPort ?? 5173)
 } else {
-  await dev({ port: config.runPort ?? 6173, vite: config.vite })
+  await dev({ port: config.devPort ?? 6173, vite: config.vite })
 }

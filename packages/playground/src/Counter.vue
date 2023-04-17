@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onServerPrefetch, ref } from 'vue'
 
-const counter = ref(2)
+const counter = ref(0)
 
 onServerPrefetch(() => {
   console.log('hi from server')
@@ -9,7 +9,7 @@ onServerPrefetch(() => {
 </script>
 
 <template>
-  {{ counter }}11
+  {{ counter }}
 
-  <button @click="counter++">Increment1</button>
+  <button @click="counter++">Increment</button>
 </template>

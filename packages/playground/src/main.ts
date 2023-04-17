@@ -2,13 +2,13 @@ import { vueSSR } from 'vue-ssr'
 
 import App from '@/App.vue'
 
-const Root = () => import('@/Root.vue')
+const Counter = () => import('@/Counter.vue')
 
 const routes = [
   {
     path: '/',
-    name: 'root',
-    component: Root,
+    name: 'counter',
+    component: Counter,
   }
 ]
 

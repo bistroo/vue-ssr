@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "vue-ssr",
     "build": "vue-ssr build",
-    "server1": "vue-ssr server1"
+    "start": "vue-ssr start"
   },
   "devDependencies": {
     "vue-ssr": "workspace:^0.0.1"

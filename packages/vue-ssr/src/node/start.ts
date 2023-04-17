@@ -3,7 +3,7 @@ import { join } from 'node:path'
 import { cwd } from 'node:process'
 import express from 'express'
 
-export async function server(port: number) {
+export async function start(port: number) {
   const indexProd = fs.readFileSync(join(cwd(), 'dist/client/index.html'), 'utf-8')
 
   const manifest = JSON.parse(

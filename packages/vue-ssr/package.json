@@ -28,8 +28,16 @@
     "dev": "rollup -w -c",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["vue3", "ssr", "vite"],
+  "keywords": [
+    "vue3",
+    "ssr",
+    "vite"
+  ],
   "dependencies": {
+    "@babel/generator": "^7.21.4",
+    "@babel/parser": "^7.21.4",
+    "@babel/traverse": "^7.21.4",
+    "@babel/types": "^7.21.4",
     "@vitejs/plugin-vue": "^4.1.0",
     "compression": "^1.7.4",
     "express": "^4.18.2",

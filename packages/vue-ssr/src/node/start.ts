@@ -19,9 +19,9 @@ export async function start(port: number) {
     const url = req.originalUrl
 
     const template = indexProd
-    const render = (await import(join(cwd(), 'dist/server/index.js'))).render
+    const generateApp = (await import(join(cwd(), 'dist/server/index.js'))).generateApp
 
-    const [appHtml, preloadLinks] = await render(url, manifest, false)
+    const [appHtml, preloadLinks] = await generateApp(url, manifest, false)
 
     const html = template
       .replace(`<!--preload-links-->`, preloadLinks)

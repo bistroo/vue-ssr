@@ -1,15 +1,15 @@
 import fs from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { cwd } from 'node:process'
-import { join, dirname, resolve as _resolve } from 'node:path'
+import { join, dirname, resolve } from 'node:path'
 import express from 'express'
 import vue from '@vitejs/plugin-vue'
 import { type UserConfig, mergeConfig } from 'vite'
+import { vueSsrPlugin } from '../vue/plugin'
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
 
 export async function dev({ port, vite: viteConfig }: { port: number, vite?: UserConfig }) {
-  const __dirname = dirname(fileURLToPath(import.meta.url))
-  const resolve = (p: string) => _resolve(__dirname, p)
-
   const manifest = {}
 
   const app = express()
@@ -20,7 +20,7 @@ export async function dev({ port, vite: viteConfig }: { port: number, vite?: Use
     base: '/',
     root: cwd(),
     logLevel: 'info',
-    plugins: [vue()],
+    plugins: [vue(), vueSsrPlugin()],
     server: {
       middlewareMode: true,
     },
@@ -34,9 +34,9 @@ export async function dev({ port, vite: viteConfig }: { port: number, vite?: Use
 
       let template = fs.readFileSync(join(cwd(), 'index.html'), 'utf-8')
       template = await vite.transformIndexHtml(url, template)
-      const render = (await vite.ssrLoadModule(resolve('vue/index.js'))).render
+      const generateApp = (await vite.ssrLoadModule(resolve(__dirname, 'vue/index.js'))).generateApp
 
-      const [appHtml, preloadLinks] = await render(url, manifest, true)
+      const [appHtml, preloadLinks] = await generateApp(url, manifest, true)
 
       const html = template
         .replace(`<!--preload-links-->`, preloadLinks)

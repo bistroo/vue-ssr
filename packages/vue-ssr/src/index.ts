@@ -1,9 +1,6 @@
-import { type Component, createSSRApp } from 'vue'
+import { type App, type Component } from 'vue'
 import { type VueSsrConfig } from './types'
 import {
-  createRouter,
-  createMemoryHistory,
-  createWebHistory,
   type RouteRecordRaw,
   type Router,
 } from 'vue-router'
@@ -15,39 +12,12 @@ export function defineConfig(config: VueSsrConfig) {
 export function vueSSR(
   App: Component,
   { routes }: { routes: RouteRecordRaw[] },
-  cb?: ({ app, router }: { app: any, router: Router }) => void)
+  cb?: ({ app, router }: { app: App, router: Router }) => void)
 {
-  const router = createRouter({
-    history: import.meta.env.SSR
-      ? createMemoryHistory('/')
-      : createWebHistory('/'),
+  return {
+    App,
     routes,
-  })
-
-  if (!import.meta.env.SSR) {
-    const app = createSSRApp(App)
-    app.use(router)
-
-    if (cb !== undefined) {
-      cb({ app, router })
-    }
-
-    router.isReady().then(() => {
-      app.mount('#app')
-
-      console.log('hydrated')
-    })
-  }
-
-  return () => {
-    const app = createSSRApp(App)
-    app.use(router)
-
-    if (cb !== undefined) {
-      cb({ app, router })
-    }
-
-    return { app, router }
+    cb,
   }
 }
 export { VueSsrConfig }

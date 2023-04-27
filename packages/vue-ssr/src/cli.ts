@@ -17,5 +17,5 @@ if (command === 'build') {
 } else if (command === 'start') {
   await start(config.startPort ?? 5173)
 } else {
-  await dev({ port: config.devPort ?? 6173, vite: config.vite })
+  await dev({ port: config.devPort ?? 6173, viteConfig: config.vite })
 }

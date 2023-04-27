@@ -1,15 +1,16 @@
 <script setup lang="ts">
-import { onServerPrefetch, ref } from 'vue'
+import { onServerPrefetch } from 'vue'
+import { useCounterStore } from '@/stores/counter'
 
-const counter = ref(0)
+const store = useCounterStore()
 
 onServerPrefetch(() => {
-  console.log('hi from server')
+  store.increment()
 })
 </script>
 
 <template>
-  {{ counter }}
+  {{ store.count }}
 
-  <button @click="counter++">Increment</button>
+  <button @click="store.increment">Increment</button>
 </template>

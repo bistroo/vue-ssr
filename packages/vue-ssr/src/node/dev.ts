@@ -4,19 +4,16 @@ import { cwd } from 'node:process'
 import { join, dirname, resolve } from 'node:path'
 import express from 'express'
 import vue from '@vitejs/plugin-vue'
-import { type UserConfig, mergeConfig } from 'vite'
+import { type UserConfig, mergeConfig, createServer } from 'vite'
+import devalue from '@nuxt/devalue'
 import { vueSsrPlugin } from '../vue/plugin'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
-export async function dev({ port, vite: viteConfig }: { port: number, vite?: UserConfig }) {
+export async function dev({ port, viteConfig: viteConfig }: { port: number, viteConfig?: UserConfig }) {
   const manifest = {}
 
-  const app = express()
-
-  let vite = await (
-    await import('vite')
-  ).createServer(mergeConfig({
+  const vite = await createServer(mergeConfig({
     base: '/',
     root: cwd(),
     logLevel: 'info',
@@ -27,6 +24,8 @@ export async function dev({ port, vite: viteConfig }: { port: number, vite?: Use
     appType: 'custom',
   }, viteConfig ?? {}))
 
+  const app = express()
+
   app.use(vite.middlewares)
   app.use('*', async (req, res) => {
     try {
@@ -34,13 +33,18 @@ export async function dev({ port, vite: viteConfig }: { port: number, vite?: Use
 
       let template = fs.readFileSync(join(cwd(), 'index.html'), 'utf-8')
       template = await vite.transformIndexHtml(url, template)
+      
       const generateApp = (await vite.ssrLoadModule(resolve(__dirname, 'vue/index.js'))).generateApp
 
-      const [appHtml, preloadLinks] = await generateApp(url, manifest, true)
+      const [appHtml, preloadLinks, state] = await generateApp(url, manifest, true)
 
-      const html = template
+      let html = template
         .replace(`<!--preload-links-->`, preloadLinks)
         .replace(`<!--app-html-->`, appHtml)
+
+      if (state !== undefined) {
+        html = html.replace(`<!--state-->`, `<script>window.__INITIAL_STATE__ = ${devalue(state)}</script>`)
+      }
 
       res.status(200).set({ 'Content-Type': 'text/html' }).end(html)
     } catch (e) {

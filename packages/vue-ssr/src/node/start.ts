@@ -2,9 +2,10 @@ import fs from 'node:fs'
 import { join } from 'node:path'
 import { cwd } from 'node:process'
 import express from 'express'
+import devalue from '@nuxt/devalue'
 
 export async function start(port: number) {
-  const indexProd = fs.readFileSync(join(cwd(), 'dist/client/index.html'), 'utf-8')
+  const template = fs.readFileSync(join(cwd(), 'dist/client/index.html'), 'utf-8')
 
   const manifest = JSON.parse(
     fs.readFileSync(join(cwd(), 'dist/client/ssr-manifest.json'), 'utf-8'),
@@ -14,18 +15,21 @@ export async function start(port: number) {
   app.use((await import('compression')).default())
   app.use('/', (await import('serve-static')).default(join(cwd(), 'dist/client'), {
     index: false,
-  }),)
+  }))
   app.use('*', async (req, res) => {
     const url = req.originalUrl
 
-    const template = indexProd
     const generateApp = (await import(join(cwd(), 'dist/server/index.js'))).generateApp
 
-    const [appHtml, preloadLinks] = await generateApp(url, manifest, false)
+    const [appHtml, preloadLinks, state] = await generateApp(url, manifest, false)
 
-    const html = template
+    let html = template
       .replace(`<!--preload-links-->`, preloadLinks)
       .replace(`<!--app-html-->`, appHtml)
+
+    if (state !== undefined) {
+      html = html.replace(`<!--state-->`, `<script>window.__INITIAL_STATE__ = ${devalue(state)}</script>`)
+    }
 
     res.status(200).set({ 'Content-Type': 'text/html' }).end(html)
   })

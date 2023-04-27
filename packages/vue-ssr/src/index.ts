@@ -1,9 +1,6 @@
-import { type App, type Component } from 'vue'
-import { type VueSsrConfig } from './types'
-import {
-  type RouteRecordRaw,
-  type Router,
-} from 'vue-router'
+import { type Component } from 'vue'
+import { type CallbackFn, type VueSsrConfig } from './types'
+import { type RouteRecordRaw } from 'vue-router'
 
 export function defineConfig(config: VueSsrConfig) {
   return config
@@ -12,7 +9,7 @@ export function defineConfig(config: VueSsrConfig) {
 export function vueSSR(
   App: Component,
   { routes }: { routes: RouteRecordRaw[] },
-  cb?: ({ app, router }: { app: App, router: Router }) => void)
+  cb?: CallbackFn)
 {
   return {
     App,

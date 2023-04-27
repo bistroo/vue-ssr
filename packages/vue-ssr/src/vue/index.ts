@@ -16,7 +16,7 @@ export async function generateApp(url: string, manifest, dev = true) {
     main = (await import(/* @vite-ignore */ resolve(__dirname, './main.js'))).default
   }
 
-  const { app, router } = (await import('./vue')).vueSSR(
+  const { app, router, state } = (await import('./vue')).vueSSR(
     main.App,
     { routes: main.routes },
     main.cb
@@ -30,7 +30,7 @@ export async function generateApp(url: string, manifest, dev = true) {
   const html = await renderToString(app, ctx)
 
   const preloadLinks = renderPreloadLinks(ctx.modules, manifest)
-  return [html, preloadLinks]
+  return [html, preloadLinks, state]
 }
 
 function renderPreloadLinks(modules, manifest) {

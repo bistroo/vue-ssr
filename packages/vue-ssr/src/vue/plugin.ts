@@ -30,7 +30,6 @@ export function vueSsrPlugin(): Plugin {
       }
     },
     transform(code, id, options) {
-      // only transform in ssr
       if (id.endsWith('main.ts') && options?.ssr === false) {
         const ast = parse(code, { sourceType: 'module' })
 
@@ -122,6 +121,6 @@ export function vueSsrPlugin(): Plugin {
           code: generate(ast).code,
         }
       }
-    }
+    },
   }
 }

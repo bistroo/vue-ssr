@@ -1,4 +1,5 @@
 import { vueSSR } from 'vue-ssr'
+import { createPinia } from 'pinia'
 
 import App from '@/App.vue'
 
@@ -12,4 +13,14 @@ const routes = [
   }
 ]
 
-export default vueSSR(App, { routes })
+export default vueSSR(App, { routes }, ({ app, state }) => {
+  const pinia = createPinia()
+
+  app.use(pinia)
+
+  if (import.meta.env.SSR) {
+    state.value = pinia.state.value
+  } else {
+    pinia.state.value = state.value
+  }
+})

@@ -1,6 +1,6 @@
 # SSR for Vue 3
 
-> Minimalistic simple Vite wrapper to run SSR Vue 3 apps
+> Minimalistic wrapper to run SSR Vue 3 apps, based on Vite
 
 ## Quick Setup
 

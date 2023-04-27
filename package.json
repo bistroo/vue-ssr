@@ -4,7 +4,7 @@
   "type": "module",
   "license": "MIT",
   "author": "Youri van Mill",
-  "description": "Minimalistic simple Vite wrapper to run SSR Vue 3 apps",
+  "description": "Minimalistic wrapper to run SSR Vue 3 apps",
   "bin": {
     "vue-ssr": "bin/vue-ssr.js"
   },

@@ -9,6 +9,8 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 export async function build(viteConfig?: UserConfig) {
   const base = '/'
 
+  const plugins = [vue()]
+
   await _build(mergeConfig({
     base,
     build: {
@@ -17,14 +19,14 @@ export async function build(viteConfig?: UserConfig) {
       rollupOptions: {
         input: [
           join(__dirname, 'vue/index.js'),
-          join(cwd(), 'src/main.ts')
+          join(cwd(), 'src/main.ts'),
         ],
         output: {
           dir: 'dist/server',
         },
       },
     },
-    plugins: [vue()],
+    plugins,
   }, viteConfig ?? {}))
 
   await _build(mergeConfig({
@@ -33,6 +35,6 @@ export async function build(viteConfig?: UserConfig) {
       ssrManifest: true,
       outDir: 'dist/client',
     },
-    plugins: [vue()],
+    plugins,
   }, viteConfig ?? {}))
 }

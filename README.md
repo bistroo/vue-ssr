@@ -1,32 +1,36 @@
 # SSR for Vue 3
 
-> Minimalistic wrapper to run SSR Vue 3 apps, based on Vite
+Minimalistic wrapper to run SSR Vue 3 apps, based on Vite
+
+## Features
+* HMR support
+* Vue Router
+* State management
 
 ## Quick Setup
 
-1. Add the following dependency to your project
+### Installation
 
 ```sh
 pnpm install vue-ssr -D
 ```
 
-2. Replace the Vite commands
+Add the following scripts
 
-```diff
-  "scripts": {
--    "dev": "vite",
-+    "dev": "vue-ssr",
--    "build": "vite build"
-+    "build": "vue-ssr build",
--    "preview": "vite preview"
-+    "start": "vue-ssr start"
-  },
+```json
+"scripts": {
+  "dev": "vue-ssr",
+  "build": "vue-ssr build",
+  "start": "vue-ssr start"
+},
 ```
 
-The `vue-ssr` command creates a dev server with HMR enabled.
+> The `vue-ssr` command creates a dev server with HMR enabled.
 To create a production ready build, use `vue-ssr build`. After creating a build, use `vue-ssr start` to serve the build with Express.
 
-3. Create a vue-ssr.config.js
+### Configuration
+
+Create a vue-ssr.config.js
 
 ```js
 import { defineConfig } from 'vue-ssr'
@@ -46,6 +50,46 @@ export default defineConfig({
 ```
 
 > Use the `vite` property with caution.
+
+### Usage
+
+```ts
+import { vueSSR } from 'vue-ssr'
+
+import App from '@/App.vue'
+
+const Counter = () => import('@/Counter.vue')
+
+const routes = [
+  {
+    path: '/',
+    name: 'counter',
+    component: Counter,
+  }
+]
+
+export default vueSSR(App, { routes })
+```
+
+The `main.ts` file should export the imported vueSSR function.
+
+Pinia is supported by using the `app` and `state` property inside the callback.
+
+```typescript
+export default vueSSR(App, { routes }, ({ app, state }) => {
+  const pinia = createPinia()
+
+  app.use(pinia)
+
+  if (import.meta.env.SSR) {
+    state.value = pinia.state.value
+  } else {
+    pinia.state.value = state.value
+  }
+})
+```
+
+> The state will be persisted on `window.__INITIAL_STATE__` property and serialized using `@nuxt/devalue`
 
 ## License
 

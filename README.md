@@ -91,6 +91,21 @@ export default vueSSR(App, { routes }, ({ app, state }) => {
 
 > The state will be persisted on `window.__INITIAL_STATE__` property and serialized using `@nuxt/devalue`
 
+It's possible to make changes to the router, use the `router` property in the callback.
+
+```typescript
+export default vueSSR(App, { routes }, ({ app, router }) => {
+  router.beforeEach(async (to, from) => {
+    if (
+      !isAuthenticated &&
+      to.name !== 'Login'
+    ) {
+      return { name: 'Login' }
+    }
+  })
+})
+```
+
 ## License
 
 MIT

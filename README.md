@@ -94,7 +94,7 @@ export default vueSSR(App, { routes }, ({ app, state }) => {
 It's possible to make changes to the router, use the `router` property in the callback.
 
 ```typescript
-export default vueSSR(App, { routes }, ({ app, router }) => {
+export default vueSSR(App, { routes }, ({ router }) => {
   router.beforeEach(async (to, from) => {
     if (
       !isAuthenticated &&

@@ -30,9 +30,9 @@ To create a production ready build, use `vue-ssr build`. After creating a build,
 
 ### Configuration
 
-Create a vue-ssr.config.js
+Create a vue-ssr.config.ts
 
-```js
+```typescript
 import { defineConfig } from 'vue-ssr'
 import { fileURLToPath } from 'node:url'
 

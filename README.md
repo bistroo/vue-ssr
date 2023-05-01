@@ -1,6 +1,6 @@
-# SSR for Vue 3
+# SSR for Vue
 
-Minimalistic wrapper to run SSR Vue 3 apps, based on Vite
+Minimalistic wrapper to run SSR Vue apps, based on Vite
 
 ## Features
 * HMR support

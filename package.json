@@ -1,19 +1,18 @@
 {
-  "name": "vue-ssr",
+  "name": "@bistroo/vue-ssr",
   "version": "0.0.1",
   "type": "module",
   "license": "MIT",
-  "author": "Youri van Mill",
   "description": "Minimalistic wrapper to run SSR Vue apps",
   "bin": {
     "vue-ssr": "bin/vue-ssr.js"
   },
   "bugs": {
-    "url": "https://github.com/yooouuri/vue-ssr/issues"
+    "url": "https://github.com/bistroo/vue-ssr/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yooouuri/vue-ssr.git"
+    "url": "git+https://github.com/bistroo/vue-ssr.git"
   },
   "types": "./dist/index.d.ts",
   "exports": {

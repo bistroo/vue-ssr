@@ -12,7 +12,7 @@ Minimalistic wrapper to run SSR Vue apps, based on Vite
 ### Installation
 
 ```sh
-pnpm install vue-ssr -D
+pnpm install @bistroo/vue-ssr -D
 ```
 
 Add the following scripts
@@ -33,7 +33,7 @@ To create a production ready build, use `vue-ssr build`. After creating a build,
 Create a vue-ssr.config.ts
 
 ```typescript
-import { defineConfig } from 'vue-ssr'
+import { defineConfig } from '@bistroo/vue-ssr'
 import { fileURLToPath } from 'node:url'
 
 export default defineConfig({
@@ -54,7 +54,7 @@ export default defineConfig({
 ### Usage
 
 ```ts
-import { vueSSR } from 'vue-ssr'
+import { vueSSR } from '@bistroo/vue-ssr'
 
 import App from '@/App.vue'
 

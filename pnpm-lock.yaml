@@ -81,12 +81,12 @@ importers:
         specifier: '4'
         version: 4.1.6(vue@3.2.47)
     devDependencies:
+      '@bistroo/vue-ssr':
+        specifier: workspace:^0.0.1
+        version: link:..
       '@vue/tsconfig':
         specifier: ^0.1.3
         version: 0.1.3(@types/node@18.15.11)
-      vue-ssr:
-        specifier: workspace:^0.0.1
-        version: link:..
 
 packages:
 

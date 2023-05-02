@@ -1,4 +1,4 @@
-import { defineConfig } from 'vue-ssr'
+import { defineConfig } from '@bistroo/vue-ssr'
 import { fileURLToPath } from 'node:url'
 
 export default defineConfig({

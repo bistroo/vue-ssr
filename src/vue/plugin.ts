@@ -35,7 +35,7 @@ export function vueSsrPlugin(): Plugin {
 
         traverse(ast, {
           ImportDeclaration(path) {
-            if (path.node.source.value === 'vue-ssr') {
+            if (path.node.source.value === '@bistroo/vue-ssr') {
               path.node.source.value = 'virtual:vue-ssr'
             }
           },

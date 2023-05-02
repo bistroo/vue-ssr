@@ -1,4 +1,4 @@
-import { vueSSR } from 'vue-ssr'
+import { vueSSR } from '@bistroo/vue-ssr'
 import { createPinia } from 'pinia'
 
 import App from '@/App.vue'

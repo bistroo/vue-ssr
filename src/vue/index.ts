@@ -20,17 +20,21 @@ export async function generateApp(url: string, manifest, req: Request, res: Resp
   const { app, router, state } = (await import('./vue')).vueSSR(
     main.App,
     { routes: main.routes },
-    main.cb
+    ({ app, router, state }) => {
+      if (main.cb !== undefined) {
+        main.cb({ app, router, state, request: req, response: res })
+      }
+    }
   )
 
   await router.push(url)
   await router.isReady()
 
   const ctx: SSRContext = {}
-  const html = await renderToString(app, ctx)
+  ctx.request = req
+  ctx.response = res
 
-  ctx.req = req
-  ctx.res = res
+  const html = await renderToString(app, ctx)
 
   const preloadLinks = renderPreloadLinks(ctx.modules, manifest)
   return [html, preloadLinks, state]

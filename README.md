@@ -106,6 +106,26 @@ export default vueSSR(App, { routes }, ({ router }) => {
 })
 ```
 
+The Express request and response objects are accessible from the callback. Make sure to wrap them in `import.meta.env.SSR`.
+
+```typescript
+export default vueSSR(App, { routes }, ({ request, response }) => {
+  if (import.meta.env.SSR) {
+    console.log(request?.originalUrl)
+  }
+})
+```
+
+Or use `useSSRContext`.
+
+```typescript
+const { request, response } = useSSRContext()
+
+if (import.meta.env.SSR) {
+  console.log(request?.originalUrl)
+}
+```
+
 ## License
 
 MIT

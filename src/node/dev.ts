@@ -36,7 +36,7 @@ export async function dev({ port, viteConfig: viteConfig }: { port: number, vite
       
       const generateApp = (await vite.ssrLoadModule(resolve(__dirname, 'vue/index.js'))).generateApp
 
-      const [appHtml, preloadLinks, state] = await generateApp(url, manifest, true)
+      const [appHtml, preloadLinks, state] = await generateApp(url, manifest, req, res, true)
 
       let html = template
         .replace(`<!--preload-links-->`, preloadLinks)

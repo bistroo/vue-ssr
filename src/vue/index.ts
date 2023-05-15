@@ -1,12 +1,13 @@
 import { fileURLToPath } from 'node:url'
 import { cwd } from 'node:process'
 import { basename, dirname, resolve, join } from 'node:path'
+import { Request, Response } from 'express'
 import { type SSRContext, renderToString } from 'vue/server-renderer'
 import { vueSSR as vueSSRType } from '../index'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
-export async function generateApp(url: string, manifest, dev = true) {
+export async function generateApp(url: string, manifest, req: Request, res: Response, dev = false) {
   let main: ReturnType<typeof vueSSRType>
 
   // dirty fix
@@ -25,9 +26,11 @@ export async function generateApp(url: string, manifest, dev = true) {
   await router.push(url)
   await router.isReady()
 
-  // TODO: add express redirect methods
   const ctx: SSRContext = {}
   const html = await renderToString(app, ctx)
+
+  ctx.req = req
+  ctx.res = res
 
   const preloadLinks = renderPreloadLinks(ctx.modules, manifest)
   return [html, preloadLinks, state]

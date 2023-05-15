@@ -21,7 +21,7 @@ export async function start(port: number) {
 
     const generateApp = (await import(join(cwd(), 'dist/server/index.js'))).generateApp
 
-    const [appHtml, preloadLinks, state] = await generateApp(url, manifest, false)
+    const [appHtml, preloadLinks, state] = await generateApp(url, manifest, req, res)
 
     let html = template
       .replace(`<!--preload-links-->`, preloadLinks)

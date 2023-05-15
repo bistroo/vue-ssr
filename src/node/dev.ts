@@ -6,6 +6,7 @@ import express from 'express'
 import vue from '@vitejs/plugin-vue'
 import { type UserConfig, mergeConfig, createServer } from 'vite'
 import devalue from '@nuxt/devalue'
+import cookieParser from 'cookie-parser'
 import { vueSsrPlugin } from '../vue/plugin'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -27,6 +28,7 @@ export async function dev({ port, viteConfig: viteConfig }: { port: number, vite
   const app = express()
 
   app.use(vite.middlewares)
+  app.use(cookieParser())
   app.use('*', async (req, res) => {
     try {
       const url = req.originalUrl

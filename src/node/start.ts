@@ -3,6 +3,7 @@ import { join } from 'node:path'
 import { cwd } from 'node:process'
 import express from 'express'
 import devalue from '@nuxt/devalue'
+import cookieParser from 'cookie-parser'
 
 export async function start(port: number) {
   const template = fs.readFileSync(join(cwd(), 'dist/client/index.html'), 'utf-8')
@@ -16,6 +17,7 @@ export async function start(port: number) {
   app.use('/', (await import('serve-static')).default(join(cwd(), 'dist/client'), {
     index: false,
   }))
+  app.use(cookieParser())
   app.use('*', async (req, res) => {
     const url = req.originalUrl
 

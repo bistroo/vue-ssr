@@ -3,6 +3,7 @@ import vue from '@vitejs/plugin-vue'
 import { cwd } from 'node:process'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { vueSsrPlugin } from '../vue/plugin'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
@@ -35,6 +36,6 @@ export async function build(viteConfig?: UserConfig) {
       ssrManifest: true,
       outDir: 'dist/client',
     },
-    plugins,
+    plugins: [...plugins, vueSsrPlugin()],
   }, viteConfig ?? {}))
 }

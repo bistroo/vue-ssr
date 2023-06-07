@@ -37,7 +37,8 @@ export async function generateApp(url: string, manifest, req: Request, res: Resp
   const html = await renderToString(app, ctx)
 
   const preloadLinks = renderPreloadLinks(ctx.modules, manifest)
-  return [html, preloadLinks, state]
+
+  return [html, preloadLinks, state, ctx.teleports ?? {}]
 }
 
 function renderPreloadLinks(modules, manifest) {

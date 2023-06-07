@@ -7,6 +7,7 @@ import vue from '@vitejs/plugin-vue'
 import { type UserConfig, mergeConfig, createServer } from 'vite'
 import devalue from '@nuxt/devalue'
 import cookieParser from 'cookie-parser'
+import { load } from 'cheerio'
 import { vueSsrPlugin } from '../vue/plugin'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -38,17 +39,22 @@ export async function dev({ port, viteConfig: viteConfig }: { port: number, vite
       
       const generateApp = (await vite.ssrLoadModule(resolve(__dirname, 'vue/index.js'))).generateApp
 
-      const [appHtml, preloadLinks, state] = await generateApp(url, manifest, req, res, true)
+      const [appHtml, preloadLinks, state, teleports] = await generateApp(url, manifest, req, res, true)
 
-      let html = template
-        .replace(`<!--preload-links-->`, preloadLinks)
-        .replace(`<!--app-html-->`, appHtml)
+      const $ = load(template)
+
+      $('head').append(preloadLinks)
+      $('#app').html(appHtml)
 
       if (state !== undefined) {
-        html = html.replace(`<!--state-->`, `<script>window.__INITIAL_STATE__ = ${devalue(state)}</script>`)
+        $('body').append(`<script>window.__INITIAL_STATE__ = ${devalue(state)}</script>`)
       }
 
-      res.status(200).set({ 'Content-Type': 'text/html' }).end(html)
+      if (teleports['#teleports'] !== undefined) {
+        $('body').append(`<div id="teleports">${teleports['#teleports']}</div>`)
+      }
+
+      res.status(200).set({ 'Content-Type': 'text/html' }).end($.html())
     } catch (e) {
       vite && vite.ssrFixStacktrace(e)
       console.log(e.stack)

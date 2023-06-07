@@ -6,6 +6,7 @@ Minimalistic wrapper to run SSR Vue apps, based on Vite
 * HMR support
 * Vue Router
 * State management
+* Teleports
 
 ## Quick Setup
 
@@ -125,6 +126,19 @@ if (import.meta.env.SSR) {
   console.log(request?.originalUrl)
 }
 ```
+
+Using Teleport is supported, but requires a little bit of setup. Targeting `body` is not supported, use `#teleports` instead.
+
+
+```html
+<template>
+  <Teleport to="#teleports">
+    <button @click="store.increment">Increment</button>
+  </Teleport>
+</template>
+```
+
+During SSR, the Teleport component will be rendered as a `div` with the `id` set to the `to` property.
 
 ## License
 

@@ -30,15 +30,18 @@ export async function generateApp(url: string, manifest, req: Request, res: Resp
   await router.push(url)
   await router.isReady()
 
+  let redirect = null
+
   const ctx: SSRContext = {}
   ctx.request = req
   ctx.response = res
+  ctx.redirect = (url: string) => redirect = url
 
   const html = await renderToString(app, ctx)
 
   const preloadLinks = renderPreloadLinks(ctx.modules, manifest)
 
-  return [html, preloadLinks, state, ctx.teleports ?? {}]
+  return [html, preloadLinks, state, ctx.teleports ?? {}, redirect]
 }
 
 function renderPreloadLinks(modules, manifest) {

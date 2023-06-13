@@ -39,7 +39,12 @@ export async function dev({ port, viteConfig: viteConfig }: { port: number, vite
       
       const generateApp = (await vite.ssrLoadModule(resolve(__dirname, 'vue/index.js'))).generateApp
 
-      const [appHtml, preloadLinks, state, teleports] = await generateApp(url, manifest, req, res, true)
+      const [appHtml, preloadLinks, state, teleports, redirect] = await generateApp(url, manifest, req, res, true)
+
+      if (redirect !== null) {
+        res.redirect(redirect)
+        return
+      }
 
       const $ = load(template)
 

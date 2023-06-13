@@ -24,7 +24,12 @@ export async function start(port: number) {
 
     const generateApp = (await import(join(cwd(), 'dist/server/index.js'))).generateApp
 
-    const [appHtml, preloadLinks, state, teleports] = await generateApp(url, manifest, req, res)
+    const [appHtml, preloadLinks, state, teleports, redirect] = await generateApp(url, manifest, req, res)
+
+    if (redirect !== null) {
+      res.redirect(redirect)
+      return
+    }
 
     const $ = load(template)
 

@@ -10,7 +10,7 @@ export function defineConfig(config: VueSsrConfig) {
 
 export function vueSSR(
   App: Component,
-  { routes, head }: { routes: RouteRecordRaw[], head: Head },
+  { routes, head }: { routes: RouteRecordRaw[], head?: Head },
   cb?: CallbackFn)
 {
   return {

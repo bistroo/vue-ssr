@@ -11,7 +11,7 @@ import { type State, type CallbackFn } from '../types'
 
 export function vueSSR(
   App: Component,
-  { routes, head: headDefaults }: { routes: RouteRecordRaw[], head: Head },
+  { routes, head: headDefaults }: { routes: RouteRecordRaw[], head?: Head },
   cb?: CallbackFn) {
   const router = createRouter({
     history: import.meta.env.SSR

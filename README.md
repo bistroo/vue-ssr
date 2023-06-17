@@ -7,6 +7,7 @@ Minimalistic wrapper to run SSR Vue apps, based on Vite
 * Vue Router
 * State management
 * Teleports
+* Document head management (powered by [@vueuse/head](https://github.com/vueuse/head))
 
 ## Quick Setup
 

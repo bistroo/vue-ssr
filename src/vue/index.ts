@@ -7,7 +7,7 @@ import { vueSSR as vueSSRType } from '../index'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
-export async function generateApp(url: string, manifest, req: Request, res: Response, dev = false) {
+export async function generateApp(url: string, manifest: any, req: Request, res: Response, dev = false) {
   let main: ReturnType<typeof vueSSRType>
 
   // dirty fix
@@ -17,9 +17,9 @@ export async function generateApp(url: string, manifest, req: Request, res: Resp
     main = (await import(/* @vite-ignore */ resolve(__dirname, './main.js'))).default
   }
 
-  const { app, router, state } = (await import('./vue')).vueSSR(
+  const { app, router, state, head } = (await import('./vue')).vueSSR(
     main.App,
-    { routes: main.routes },
+    { routes: main.routes, head: main.head },
     ({ app, router, state }) => {
       if (main.cb !== undefined) {
         main.cb({ app, router, state, request: req, response: res })
@@ -41,7 +41,7 @@ export async function generateApp(url: string, manifest, req: Request, res: Resp
 
   const preloadLinks = renderPreloadLinks(ctx.modules, manifest)
 
-  return [html, preloadLinks, state, ctx.teleports ?? {}, redirect]
+  return [html, preloadLinks, state, head, ctx.teleports ?? {}, redirect]
 }
 
 function renderPreloadLinks(modules, manifest) {

@@ -1,15 +1,17 @@
-import { type Component, createSSRApp, type App } from 'vue'
+import { type Component, createSSRApp } from 'vue'
 import {
   type RouteRecordRaw,
   createMemoryHistory,
   createRouter,
   createWebHistory
 } from 'vue-router'
+import { createHead } from '@vueuse/head'
+import { type Head } from '@unhead/schema'
 import { type State, type CallbackFn } from '../types'
 
 export function vueSSR(
   App: Component,
-  { routes }: { routes: RouteRecordRaw[] },
+  { routes, head: headDefaults }: { routes: RouteRecordRaw[], head: Head },
   cb?: CallbackFn) {
   const router = createRouter({
     history: import.meta.env.SSR
@@ -26,8 +28,11 @@ export function vueSSR(
     state.value = window.__INITIAL_STATE__ as object
   }
 
+  const head = createHead(headDefaults)
+
   const app = createSSRApp(App)
   app.use(router)
+  app.use(head)
 
   if (cb !== undefined) {
     cb({ app, router, state })
@@ -37,5 +42,6 @@ export function vueSSR(
     app,
     router,
     state: state.value,
+    head,
   }
 }

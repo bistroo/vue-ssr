@@ -14,7 +14,7 @@ const command = args._[0];
 if (command === 'build') {
   await build(config?.vite)
 } else if (command === 'start') {
-  await start(config?.startPort ?? 5173)
+  await start(config?.port ?? 5173, config?.hostname ?? 'localhost')
 } else {
-  await dev({ port: config?.devPort ?? 6173, viteConfig: config?.vite })
+  await dev({ port: config?.port ?? 5173, hostname: config?.hostname ?? 'localhost', viteConfig: config?.vite })
 }

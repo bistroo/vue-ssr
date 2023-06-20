@@ -13,7 +13,7 @@ import { vueSsrPlugin } from '../vue/plugin'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
-export async function dev({ port, viteConfig: viteConfig }: { port: number, viteConfig?: UserConfig }) {
+export async function dev({ port, hostname, viteConfig: viteConfig }: { port: number, hostname: string, viteConfig?: UserConfig }) {
   const manifest = {}
 
   const vite = await createServer(mergeConfig({
@@ -115,7 +115,7 @@ export async function dev({ port, viteConfig: viteConfig }: { port: number, vite
     }
   })
 
-  app.listen(port, () => {
-    console.log(`http://localhost:${port}`)
+  app.listen(port, hostname, () => {
+    console.log(`http://${hostname}:${port}`)
   })
 }

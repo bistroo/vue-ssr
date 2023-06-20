@@ -39,8 +39,6 @@ import { defineConfig } from '@bistroo/vue-ssr'
 import { fileURLToPath } from 'node:url'
 
 export default defineConfig({
-  devPort: 5173,
-  startPort: 6173,
   vite: {
     resolve: {
       alias: {

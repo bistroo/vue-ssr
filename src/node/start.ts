@@ -7,7 +7,7 @@ import cookieParser from 'cookie-parser'
 import { load } from 'cheerio'
 import { type HeadTag } from '@vueuse/head'
 
-export async function start(port: number) {
+export async function start(port: number, hostname: string) {
   const template = fs.readFileSync(join(cwd(), 'dist/client/index.html'), 'utf-8')
 
   const manifest = JSON.parse(
@@ -95,7 +95,7 @@ export async function start(port: number) {
     res.status(200).set({ 'Content-Type': 'text/html' }).end($.html())
   })
 
-  app.listen(port, () => {
-    console.log(`http://localhost:${port}`)
+  app.listen(port, hostname, () => {
+    console.log(`http://${hostname}:${port}`)
   })
 }

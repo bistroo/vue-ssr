@@ -5,8 +5,8 @@ import { Request, Response } from 'express'
 
 export type VueSsrConfig = {
   vite?: UserConfig
-  devPort?: number
-  startPort?: number
+  port?: number
+  hostname?: string
 }
 
 export type State = { value?: any }

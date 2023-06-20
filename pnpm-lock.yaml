@@ -94,7 +94,7 @@ importers:
         version: 4.1.6(vue@3.2.47)
     devDependencies:
       '@bistroo/vue-ssr':
-        specifier: workspace:^0.0.6
+        specifier: workspace:*
         version: link:..
       '@vue/tsconfig':
         specifier: ^0.1.3

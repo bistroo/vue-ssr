@@ -11,10 +11,12 @@ const { config } = await loadConfig<VueSsrConfig>({ name: 'vue-ssr' })
 const args = mri(argv.slice(2));
 const command = args._[0];
 
+const { host, port } = args
+
 if (command === 'build') {
   await build(config?.vite)
 } else if (command === 'start') {
-  await start(config?.port ?? 5173, config?.hostname ?? 'localhost')
+  await start(port ?? config?.port ?? 5173, host ?? config?.hostname ?? 'localhost')
 } else {
-  await dev({ port: config?.port ?? 5173, hostname: config?.hostname ?? 'localhost', viteConfig: config?.vite })
+  await dev({ port: port ?? config?.port ?? 5173, hostname: host ?? config?.hostname ?? 'localhost', viteConfig: config?.vite })
 }

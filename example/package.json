@@ -9,12 +9,14 @@
     "start": "vue-ssr start"
   },
   "dependencies": {
+    "@vueuse/head": "^1.1.26",
     "pinia": "^2.0.35",
     "vue": "^3.2.47",
     "vue-router": "4"
   },
   "devDependencies": {
+    "@bistroo/vue-ssr": "workspace:*",
     "@vue/tsconfig": "^0.1.3",
-    "@bistroo/vue-ssr": "workspace:*"
+    "typescript": "^4.9.4"
   }
 }

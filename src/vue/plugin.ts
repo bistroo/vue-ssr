@@ -9,14 +9,22 @@ import _generate from '@babel/generator'
 const generate = _generate.default
 import t from '@babel/types'
 
-const __dirname = dirname(fileURLToPath(import.meta.url))
-
 export function vueSsrPlugin(): Plugin {
   const virtualModuleId = 'virtual:vue-ssr'
   const resolvedVirtualModuleId = '\0' + virtualModuleId
 
+  let ssr = true
+
   return {
     name: 'vite-vue-ssr-plugin',
+    config(config, { ssrBuild }) {
+      ssr = ssrBuild
+
+      if (!ssrBuild) {
+        delete config.build.ssrManifest
+        delete config.ssr
+      }
+    },
     resolveId(id) {
       if (id === virtualModuleId) {
         return resolvedVirtualModuleId
@@ -24,10 +32,25 @@ export function vueSsrPlugin(): Plugin {
     },
     load(id) {
       if (id === resolvedVirtualModuleId) {
+        const __dirname = dirname(fileURLToPath(import.meta.url))
+
         const data = readFileSync(resolve(join(__dirname, 'vue/vue.js')), 'utf8')
 
         return data
       }
+    },
+    transformIndexHtml() {
+      if (ssr) return
+
+      return [
+        {
+          tag: 'div',
+          attrs: {
+            id: 'teleports',
+          },
+          injectTo: 'body',
+        }
+      ]
     },
     transform(code, id, options) {
       const ssr = options?.ssr ?? false

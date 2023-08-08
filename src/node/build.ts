@@ -12,6 +12,10 @@ export async function build(viteConfig?: UserConfig, ssr: boolean = true) {
 
   const plugins = [vue()]
 
+  const define = {
+    '__SSR_APP__': ssr,
+  }
+
   if (ssr) {
     await _build(mergeConfig({
       base,
@@ -28,7 +32,8 @@ export async function build(viteConfig?: UserConfig, ssr: boolean = true) {
           },
         },
       },
-      plugins,
+      plugins: [...plugins],
+      define,
     }, viteConfig ?? {}))
   }
 
@@ -39,5 +44,6 @@ export async function build(viteConfig?: UserConfig, ssr: boolean = true) {
       outDir: ssr ? 'dist/client' : 'dist',
     },
     plugins: [...plugins, vueSsrPlugin()],
+    define,
   }, viteConfig ?? {}))
 }

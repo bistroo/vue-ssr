@@ -13,9 +13,6 @@ const { host, port, config: c, ssr } = args
 
 const { config } = await loadConfig<VueSsrConfig>({ configFile: c ?? 'vue-ssr.config.ts' })
 
-console.log({ config })
-console.log({ args })
-
 if (command === 'build') {
   await build(config?.vite, ssr !== undefined ? /^true$/i.test(ssr) : config?.ssr ?? true)
 } else if (command === 'start') {

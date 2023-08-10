@@ -18,7 +18,9 @@ export function vueSsrPlugin(): Plugin {
   return {
     name: 'vite-vue-ssr-plugin',
     config(config) {
-      if (!config.define.__SSR_APP__) {
+      ssr = config.define.__SSR_APP__
+
+      if (!ssr) {
         delete config.build.ssrManifest
         delete config.ssr
       }

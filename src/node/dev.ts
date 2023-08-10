@@ -25,6 +25,9 @@ export async function dev({ port, hostname, viteConfig: viteConfig }: { port: nu
       middlewareMode: true,
     },
     appType: 'custom',
+    define: {
+      __SSR_APP__: true,
+    },
   }, viteConfig ?? {}))
 
   const app = express()

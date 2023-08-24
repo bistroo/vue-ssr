@@ -1,6 +1,6 @@
 {
   "name": "@bistroo/vue-ssr",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "type": "module",
   "license": "MIT",
   "description": "Minimalistic wrapper to run SSR Vue apps",

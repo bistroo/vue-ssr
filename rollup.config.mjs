@@ -14,24 +14,29 @@ export default [
     ],
   },
   {
-    input: 'src/cli.ts',
+    input: 'src/plugin.ts',
+    external: [
+      'vue',
+      'vue-router',
+      '@vueuse/head',
+      'vue/server-renderer',
+      'cheerio',
+      '@nuxt/devalue',
+    ],
     output: {
       format: 'es',
-      file: `dist/cli.js`,
+      dir: 'dist',
     },
     plugins: [
       esbuild(),
     ],
   },
   {
-    input: 'src/vue/index.ts',
-    external: ['vue', 'vue/server-renderer', 'vue-router'],
+    input: 'src/vue.ts',
+    external: ['vue', 'vue-router', '@vueuse/head'],
     output: {
+      file: 'dist/vue.js',
       format: 'es',
-      dir: `dist/vue`,
-      chunkFileNames(chunkInfo) {
-        return `${chunkInfo.name}.js`
-      }
     },
     plugins: [
       esbuild(),
@@ -41,6 +46,20 @@ export default [
     input: 'src/index.ts',
     output: {
       file: 'dist/index.d.ts',
+      format: 'es',
+    },
+    plugins: [
+      dts({
+        compilerOptions: {
+           preserveSymlinks: false
+         }
+       }),
+    ],
+  },
+  {
+    input: 'src/plugin.ts',
+    output: {
+      file: 'dist/plugin.d.ts',
       format: 'es',
     },
     plugins: [

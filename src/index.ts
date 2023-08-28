@@ -1,18 +1,8 @@
-import { type Component } from 'vue'
-import { type CallbackFn, type VueSsrConfig } from './types'
-import { type RouterScrollBehavior, type RouteRecordRaw } from 'vue-router'
-import { type Head } from '@unhead/schema'
-import { ClientOnly } from './vue/ClientOnly'
+import type { Component } from 'vue'
+import type { Params, CallbackFn } from './types'
+import { ClientOnly } from './ClientOnly'
 
-export function defineConfig(config: VueSsrConfig) {
-  return config
-}
-
-export function vueSSR(
-  App: Component,
-  { routes, head, scrollBehavior }: { routes: RouteRecordRaw[], head?: Head, scrollBehavior?: RouterScrollBehavior },
-  cb?: CallbackFn)
-{
+export function vueSSR(App: Component, { routes, head, scrollBehavior }: Params, cb?: CallbackFn) {
   return {
     App,
     routes,
@@ -21,4 +11,4 @@ export function vueSSR(
     cb,
   }
 }
-export { VueSsrConfig, ClientOnly }
+export { ClientOnly }

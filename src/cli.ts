@@ -36,6 +36,9 @@ if (command === 'build') {
       base: '/',
       root: cwd(),
       plugins: [vue(), vueSsrPlugin()],
+      server: {
+        host: true,
+      },
       define: {
         __SSR_APP__: false,
       },

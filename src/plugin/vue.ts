@@ -5,29 +5,30 @@ import {
   createWebHistory
 } from 'vue-router'
 import { createHead } from '@vueuse/head'
-import type { State, CallbackFn, Params } from './types'
+import type { State, CallbackFn, Params } from '../types'
 
-export function vueSSR(App: Component, params: Params, cb?: CallbackFn, ssr = false) {
+export function vueSSR(App: Component, params: Params, cb?: CallbackFn, ssrBuild = false, ssr = false) {
   const { routes, head: headDefaults, scrollBehavior } = params
-
-  const router = createRouter({
-    history: ssr ? createMemoryHistory('/') : createWebHistory('/'),
-    routes,
-    scrollBehavior,
-  })
 
   const state: State = {
     value: undefined,
   }
 
   if (!ssr) {
+    // @ts-ignore
     state.value = window.__INITIAL_STATE__ as object
   }
 
-  const head = createHead(headDefaults)
+  const app = ssrBuild ? createSSRApp(App) : createApp(App)
 
-  const app = ssr ? createSSRApp(App) : createApp(App)
+  const router = createRouter({
+    history: ssr ? createMemoryHistory('/') : createWebHistory('/'),
+    routes,
+    scrollBehavior,
+  })
   app.use(router)
+
+  const head = createHead(headDefaults)
   app.use(head)
 
   if (cb !== undefined) {
@@ -37,7 +38,9 @@ export function vueSSR(App: Component, params: Params, cb?: CallbackFn, ssr = fa
   return {
     app,
     router,
-    state: state.value,
+    state,
     head,
+    scrollBehavior,
+    cb,
   }
 }

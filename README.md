@@ -1,6 +1,6 @@
-# SSR for Vue
+# vite-plugin-vue-ssr
 
-Minimalistic wrapper to run SSR Vue apps, based on Vite
+Vite plugin to develop Vue 3 SSR apps
 
 ## Features
 * HMR support
@@ -14,47 +14,55 @@ Minimalistic wrapper to run SSR Vue apps, based on Vite
 ### Installation
 
 ```sh
-pnpm install @bistroo/vue-ssr -D
+pnpm install vite-plugin-vue-ssr -D
 ```
 
-Add the following scripts
-
-```json
-"scripts": {
-  "dev": "vue-ssr",
-  "build": "vue-ssr build",
-  "start": "vue-ssr start"
-},
-```
-
-> The `vue-ssr` command creates a dev server with HMR enabled.
-To create a production ready build, use `vue-ssr build`. After creating a build, use `vue-ssr start` to serve the build with Express.
-
-### Configuration
-
-Create a vue-ssr.config.ts
-
-```typescript
-import { defineConfig } from '@bistroo/vue-ssr'
+vite.config.ts
+```ts
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+import vueSsr from 'vite-plugin-vue-ssr/plugin'
 import { fileURLToPath } from 'node:url'
 
 export default defineConfig({
-  vite: {
-    resolve: {
-      alias: {
-        '@': fileURLToPath(new URL('./src', import.meta.url)),
-      },
+  plugins: [
+    vue(),
+    vueSsr(),
+  ],
+  resolve: {
+    alias: {
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
 })
-```
 
-> Use the `vite` property with caution.
+```
 
 ### Usage
 
+Add the build commands to your `package.json` file.
+
+```json
+{
+  "scripts": {
+    "dev": "vite",
+    "build": "pnpm run build:client && pnpm run build:server",
+    "build:client": "vite build --ssrManifest --outDir dist/client",
+    "build:server": "vite build --ssr src/main.ts --outDir dist/server"
+  }
+}
+```
+
+This will build a client and server bundle.
+
+Use the `vite` command to start a SSR enabled dev server.
+
+> Disabling SSR in vite will enable to build a SPA version.
+
+The `main.ts` file should export the imported vueSSR function.
+
 ```ts
-import { vueSSR } from '@bistroo/vue-ssr'
+import { vueSSR } from 'vite-plugin-vue-ssr'
 
 import App from '@/App.vue'
 
@@ -71,9 +79,7 @@ const routes = [
 export default vueSSR(App, { routes })
 ```
 
-The `main.ts` file should export the imported vueSSR function.
-
-Pinia is supported by using the `app` and `state` property inside the callback.
+Pinia/Vuex is supported by using the `app` and `state` property inside the callback.
 
 ```typescript
 export default vueSSR(App, { routes }, ({ app, state }) => {

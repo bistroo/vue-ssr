@@ -1,22 +1,40 @@
 // @ts-nocheck
 import { readFileSync } from 'node:fs'
-import { dirname, resolve, join } from 'node:path'
 import { cwd } from 'node:process'
-import { fileURLToPath } from 'node:url'
 import { Plugin } from 'vite'
 import { SSRContext, renderToString } from 'vue/server-renderer'
 import { load } from 'cheerio'
 import devalue from '@nuxt/devalue'
-import { transformMain } from './transformMain'
+import cookieParser from 'cookie-parser'
+import { transformEntrypoint } from './transformEntrypoint'
+import type { vueSSR as vueSSRFn } from '../index'
 
 export default function vueSsrPlugin(): Plugin {
   let ssr: boolean | string
 
-  const virtualModuleId = 'virtual:plugin'
+  const virtualModuleId = 'virtual:ssr-entry-point'
   const resolvedVirtualModuleId = '\0' + virtualModuleId
 
   return {
     name: 'vue-ssr',
+    resolveId(id) {
+      if (id === virtualModuleId) {
+        return resolvedVirtualModuleId
+      }
+    },
+    load(id) {
+      if (id === resolvedVirtualModuleId) {
+        return `export function vueSSR(App, { routes, head, scrollBehavior }, cb) {
+          return {
+            App,
+            routes,
+            head,
+            scrollBehavior,
+            cb,
+          }
+        }`
+      }
+    },
     config(config, { command }) {
       ssr = config.build?.ssr
 
@@ -30,25 +48,7 @@ export default function vueSsrPlugin(): Plugin {
         ssr = config.build.ssr
       }
 
-      config.define = {
-        __SSR__: !!ssr,
-      }
-
       config.appType = ssr ? 'custom' : 'spa'
-    },
-    resolveId(id) {
-      if (id === virtualModuleId) {
-        return resolvedVirtualModuleId
-      }
-    },
-    load(id) {
-      if (id === resolvedVirtualModuleId) {
-        const __dirname = dirname(fileURLToPath(import.meta.url))
-
-        const data = readFileSync(resolve(join(__dirname, 'vue.js')), 'utf8')
-
-        return data
-      }
     },
     transformIndexHtml() {
       if (ssr) return
@@ -64,24 +64,29 @@ export default function vueSsrPlugin(): Plugin {
       ]
     },
     transform(code, id, options) {
-      if (id.endsWith('main.ts') && options?.ssr === false) {
-        return transformMain(code)
+      if (id.endsWith('main.ts')) {
+        return transformEntrypoint(code, options?.ssr ?? false, !!ssr)
       }
     },
     configureServer(server) {
       if (ssr) {
         return () => {
+          server.middlewares.use(cookieParser())
           server.middlewares.use(async (req, res) => {
             const url = req.originalUrl
   
             let template = readFileSync(resolve(cwd(), 'index.html'), 'utf-8')
             template = await server.transformIndexHtml(url!, template)
 
-            const { App, routes, cb } = (await server.ssrLoadModule(resolve(cwd(), ssr))).default
+            const { App, routes, cb }: ReturnType<typeof vueSSRFn> = (await server.ssrLoadModule(resolve(cwd(), ssr))).default
 
             const { vueSSR } = (await import('./vue'))
 
-            const { app, router, state, head } = vueSSR(App, { routes }, cb, true)
+            const { app, router, state, head } = vueSSR(App, { routes }, undefined, true, true)
+
+            if (cb !== undefined) {
+              cb({ app, router, state, request: req, response: res })
+            }
 
             await router.push(url!)
             await router.isReady()
@@ -151,7 +156,7 @@ export default function vueSsrPlugin(): Plugin {
             }
 
             if (state !== undefined) {
-              $('body').append(`<script>window.__INITIAL_STATE__ = ${devalue(state)}</script>`)
+              $('body').append(`<script>window.__INITIAL_STATE__ = ${devalue(state.value)}</script>`)
             }
 
             const teleports = ctx.teleports ?? {}

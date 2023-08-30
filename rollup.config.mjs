@@ -14,35 +14,6 @@ export default [
     ],
   },
   {
-    input: 'src/plugin.ts',
-    external: [
-      'vue',
-      'vue-router',
-      '@vueuse/head',
-      'vue/server-renderer',
-      'cheerio',
-      '@nuxt/devalue',
-    ],
-    output: {
-      format: 'es',
-      dir: 'dist',
-    },
-    plugins: [
-      esbuild(),
-    ],
-  },
-  {
-    input: 'src/vue.ts',
-    external: ['vue', 'vue-router', '@vueuse/head'],
-    output: {
-      file: 'dist/vue.js',
-      format: 'es',
-    },
-    plugins: [
-      esbuild(),
-    ],
-  },
-  {
     input: 'src/index.ts',
     output: {
       file: 'dist/index.d.ts',
@@ -57,9 +28,27 @@ export default [
     ],
   },
   {
-    input: 'src/plugin.ts',
+    input: 'src/plugin/index.ts',
+    external: [
+      'vue',
+      'vue-router',
+      '@vueuse/head',
+      'vue/server-renderer',
+      'cheerio',
+      '@nuxt/devalue',
+    ],
     output: {
-      file: 'dist/plugin.d.ts',
+      format: 'es',
+      dir: 'dist/plugin',
+    },
+    plugins: [
+      esbuild(),
+    ],
+  },
+  {
+    input: 'src/plugin/index.ts',
+    output: {
+      file: 'dist/plugin/index.d.ts',
       format: 'es',
     },
     plugins: [
@@ -69,5 +58,16 @@ export default [
          }
        }),
     ],
-  }
+  },
+  // {
+  //   input: 'src/plugin/vue.ts',
+  //   external: ['vue', 'vue-router', '@vueuse/head'],
+  //   output: {
+  //     file: 'dist/plugin/vue.js',
+  //     format: 'es',
+  //   },
+  //   plugins: [
+  //     esbuild(),
+  //   ],
+  // },
 ]

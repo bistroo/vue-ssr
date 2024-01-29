@@ -119,6 +119,6 @@ export async function dev({ port, hostname, viteConfig: viteConfig }: { port: nu
   })
 
   app.listen(port, hostname, () => {
-    console.log(`http://${hostname}:${port}`)
+    console.log(`start dev server on http://${hostname}:${port}`)
   })
 }

@@ -96,6 +96,6 @@ export async function start(port: number, hostname: string) {
   })
 
   app.listen(port, hostname, () => {
-    console.log(`http://${hostname}:${port}`)
+    console.log(`start production on http://${hostname}:${port}`)
   })
 }

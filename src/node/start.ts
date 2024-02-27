@@ -1,11 +1,27 @@
 import fs from 'node:fs'
-import { join } from 'node:path'
-import { cwd } from 'node:process'
+import {join} from 'node:path'
+import {cwd} from 'node:process'
+import type {NextFunction, Request, Response} from 'express'
 import express from 'express'
 import devalue from '@nuxt/devalue'
 import cookieParser from 'cookie-parser'
-import { load } from 'cheerio'
-import { type HeadTag } from '@vueuse/head'
+import {load} from 'cheerio'
+import {type HeadTag} from '@vueuse/head'
+
+const catchAsync = (fn: (req: Request, res: Response, next: NextFunction) => Promise<void>) =>
+  (req: Request, res: Response, next: NextFunction) => {
+    Promise.resolve(fn(req, res, next)).catch(next)
+  }
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason)
+  // Additional logic as needed
+})
+
+process.on('uncaughtException', (error: Error) => {
+  console.error('Uncaught Exception:', error)
+  // Additional logic as needed
+})
 
 export async function start(port: number, hostname: string) {
   const template = fs.readFileSync(join(cwd(), 'dist/client/index.html'), 'utf-8')
@@ -20,8 +36,9 @@ export async function start(port: number, hostname: string) {
     index: false,
   }))
   app.use(cookieParser())
-  app.use('*', async (req, res) => {
+  app.use('*', catchAsync(async (req, res, next) => {
     const url = req.originalUrl
+    console.log(`Requested: ${url}`)
 
     const generateApp = (await import(join(cwd(), 'dist/server/index.js'))).generateApp
 
@@ -92,7 +109,12 @@ export async function start(port: number, hostname: string) {
       $('body').append(`<div id="teleports">${teleports['#teleports']}</div>`)
     }
 
-    res.status(200).set({ 'Content-Type': 'text/html' }).end($.html())
+    res.status(200).set({'Content-Type': 'text/html'}).end($.html())
+  }))
+
+  app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
+    console.error('Unhandled Error:', error)
+    res.status(500).send('Internal Server Error')
   })
 
   app.listen(port, hostname, () => {
